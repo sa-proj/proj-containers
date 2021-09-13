@@ -12,6 +12,9 @@ spec:
       labels:
         app: mssql
     spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
       terminationGracePeriodSeconds: 10
       containers:
       - name: mssql
@@ -19,13 +22,15 @@ spec:
         ports:
         - containerPort: 1433
         env:
+        - name: MSSQL_PID
+          value: "Developer"
         - name: ACCEPT_EULA
           value: "Y"
         - name: SA_PASSWORD
           valueFrom:
             secretKeyRef:
               name: sql-server-secret
-              key: SA_PASSWORD
+              key: MSSQL_SA_PASSWORD
         - name: MSSQL_DATA_DIR
           value: /var/opt/mssql/data
         - name: MSSQL_LOG_DIR
