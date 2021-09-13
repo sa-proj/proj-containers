@@ -13,8 +13,8 @@ spec:
         app: mssql
     spec:
       securityContext:
-        runAsUser: 10001
-        runAsGroup: 10001
+        runAsUser: 0
+        runAsGroup: 0
       terminationGracePeriodSeconds: 10
       containers:
       - name: mssql
