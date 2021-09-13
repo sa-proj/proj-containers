@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+  template:
+    metadata:
+      labels:
+        app: mssql
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mssql
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+        - containerPort: 1433
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql-server-secret
+              key: MSSQL_SA_PASSWORD
+        - name: MSSQL_DATA_DIR
+          value: /var/opt/mssql/data
+        - name: MSSQL_LOG_DIR
+          value: /var/opt/mssql/log
+          
+        volumeMounts:
+        - name: mssql-base-volume
+          mountPath: /var/opt/mssql
+        - name: mssql-log-volume
+          mountPath: /var/opt/mssql/log
+        - name: mssql-data-volume
+          mountPath: /var/opt/mssql/data
+      volumes:
+      - name: mssql-base-volume
+        persistentVolumeClaim:
+          claimName: mssql-base-volume
+      - name: mssql-data-volume
+        persistentVolumeClaim:
+          claimName: mssql-data-volume
+      - name: mssql-log-volume
+        persistentVolumeClaim:
+          claimName: mssql-log-volume
