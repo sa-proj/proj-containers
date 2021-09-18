@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agslistener-service
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  selector:
+    hadr: turn-on
+  ports:
+  - protocol: TCP
+    port: 44444
+    targetPort: 44444
+  type: LoadBalancer

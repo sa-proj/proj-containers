@@ -1,0 +1,140 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql3-dxe-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql3-base-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql3-data-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql3-log-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sql-3
+spec:
+  serviceName: "sql-3"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sql-3
+  template:
+    metadata:
+      labels:
+        app: sql-3
+        hadr: turn-on
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      terminationGracePeriodSeconds: 10
+      nodeSelector: 
+       role: ags-secondary-2
+      containers:
+      - name: mssql
+        image: sandeeparora/sql2k19-hadr-dh2i
+        ports:
+        - containerPort: 1433
+        - containerPort: 7979
+        env:
+        - name: MSSQL_PID
+          value: "Developer"
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql-server-secret
+              key: MSSQL_SA_PASSWORD
+        - name: MSSQL_AGENT_ENABLED
+          value: "true"
+        - name: MSSQL_ENABLE_HADR
+          value: "1"
+        - name: MSSQL_DATA_DIR
+          value: /var/opt/mssql/data
+        - name: MSSQL_LOG_DIR
+          value: /var/opt/mssql/log
+        - name: MSSQL_BACKUP_DIR
+          value: /var/opt/mssql/backup
+          
+        volumeMounts:
+        - name: mssql3-base-volume
+          mountPath: /var/opt/mssql
+        - name: mssql3-log-volume
+          mountPath: /var/opt/mssql/log
+        - name: mssql3-data-volume
+          mountPath: /var/opt/mssql/data
+        - name: mssql-common-volume
+          mountPath: /var/opt/mssql/backup
+        - name: mssql3-dxe-volume 
+          mountPath: /etc/dh2i 
+      volumes:
+      - name: mssql3-base-volume
+        persistentVolumeClaim:
+          claimName: mssql3-base-volume
+      - name: mssql3-data-volume
+        persistentVolumeClaim:
+          claimName: mssql3-data-volume
+      - name: mssql3-log-volume
+        persistentVolumeClaim:
+          claimName: mssql3-log-volume
+      - name: mssql-common-volume
+        persistentVolumeClaim:
+          claimName: mssql-common-volume-claim
+      - name: mssql3-dxe-volume
+        persistentVolumeClaim:
+          claimName: mssql3-dxe-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sql-3-external-service
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  selector:
+    app: sql-3
+  ports:
+    - name: mssql
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+    - name: dxe
+      protocol: TCP
+      port: 7979
+      targetPort: 7979
+  type: LoadBalancer
