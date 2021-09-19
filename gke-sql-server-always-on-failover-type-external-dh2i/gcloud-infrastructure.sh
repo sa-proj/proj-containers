@@ -117,6 +117,7 @@ gcloud beta container --project $GCP_PROJECT_ID clusters create $CLUSTERNAME \
     --enable-shielded-nodes \
     --node-locations $ZONE_B
 gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE_B --project $GCP_PROJECT_ID
+cd sql2k19-hadr-dh2i-image
 docker build -t gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i .
 docker push gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i
 kubectl get nodes
