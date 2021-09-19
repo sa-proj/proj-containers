@@ -117,13 +117,12 @@ gcloud beta container --project $GCP_PROJECT_ID clusters create $CLUSTERNAME \
     --enable-shielded-nodes \
     --node-locations $ZONE_B
 gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE_B --project $GCP_PROJECT_ID
-cd sql2k19-hadr-dh2i-image
-docker build -t gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i .
-docker push gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i
-kubectl get nodes
+#cd ~/proj-containers/sql2k19-hadr-dh2i-image/
+#docker build -t gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i .
+#docker push gcr.io/$GCP_PROJECT_ID/sql2k19-hadr-dh2i
 kubectl create secret generic sql-server-secret \
     --from-literal=MSSQL_SA_PASSWORD="P@ssw0rd"
-
+#kubectl get nodes
 #kubectl label node gke-gke-cluster-1-default-pool-391132f9-684s role=ags-primary
 #kubectl label node gke-gke-cluster-1-default-pool-391132f9-c9j4 role=ags-secondary-1
 #kubectl label node gke-gke-cluster-1-default-pool-391132f9-lsl2 role=ags-secondary-2
