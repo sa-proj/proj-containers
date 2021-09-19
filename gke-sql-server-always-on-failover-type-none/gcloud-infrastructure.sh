@@ -116,7 +116,8 @@ gcloud beta container --project $GCP_PROJECT_ID clusters create $CLUSTERNAME \
     --max-unavailable-upgrade 0 \
     --enable-shielded-nodes \
     --node-locations $ZONE_B
-gcloud container clusters get-credentials $CLUSTERNAME --zone $ZONE_B --project $GCP_PROJECT_ID
+gcloud container clusters get-credentials $CLUSTERNAME \
+    --zone $ZONE_B --project $GCP_PROJECT_ID
 kubectl create secret generic sql-server-secret --from-literal=MSSQL_SA_PASSWORD="P@ssw0rd"
 
 #kubectl label node gke-gke-cluster-1-default-pool-3bed3bf4-4109 role=ags-primary
