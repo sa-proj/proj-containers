@@ -74,7 +74,7 @@ gcloud beta compute --project=$GCP_PROJECT_ID instances create $BASTION_HOST_NAM
     --network-tier=PREMIUM \
     --maintenance-policy=MIGRATE \
     --tags=$BASTION_HOST_TAG \
-    --image=sql-2017-express-windows-2019-dc-v20210914 \
+    --image=sql-2017-express-windows-2019-dc-v20211012 \
     --image-project=windows-sql-cloud \
     --boot-disk-size=50GB \
     --boot-disk-type=pd-balanced \
@@ -90,7 +90,7 @@ gcloud compute routers nats create nat-config \
 gcloud beta container --project $GCP_PROJECT_ID clusters create $CLUSTERNAME \
     --zone $ZONE_B \
     --no-enable-basic-auth \
-    --cluster-version "1.20.9-gke.701" \
+    --cluster-version "1.21.5-gke.1302" \
     --release-channel "regular" \
     --machine-type "e2-medium" \
     --image-type "COS_CONTAINERD" \
