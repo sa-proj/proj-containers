@@ -1,4 +1,8 @@
 #---------------------------------------------------
+#Official documentation Link - docs.dh2i.com
+#---------------------------------------------------
+
+#---------------------------------------------------
 #On Primary POD sql-1-0
 #---------------------------------------------------
 #1. Activate the DxEnterprise license using the command
@@ -52,4 +56,8 @@ kubectl exec sql-1-0 -- dxcli add-ags-databases vhost1 ags1 sample
 kubectl exec sql-1-0 -- dxcli add-ags-listener vhost1 ags1 44444
 
 
-#Official documentation Link - docs.dh2i.com
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+#DXAdmin Setup - https://dh2i.com/docs/20-0/dxenterprise/dh2i-dxenterprise-20-0-software-dxadmin-client-ui-quick-start-guide/
+#Setup PassKey for DXAdmin
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+kubectl exec sql-1-0 -- dxcli cluster-set-secret-ex P@ssw0rd
