@@ -52,4 +52,4 @@ kubectl exec sql-1-0 -- dxcli add-ags-databases vhost1 ags1 sample
 kubectl exec sql-1-0 -- dxcli add-ags-listener vhost1 ags1 44444
 
 
-#Official documentation Link - https://dh2i.com/wp-content/uploads/DxEnterprise-v21.0-Supplemental-Guide-for-Availability-Groups-in-Kubernetes.pdf
+#Official documentation Link - docs.dh2i.com
